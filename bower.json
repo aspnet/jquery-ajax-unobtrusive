@@ -7,7 +7,8 @@
         "jquery.unobtrusive-ajax.js"
     ],
     "ignore": [
-        "*.json",
+	    "**/.*",
+	    "*.json",
         "*.md",
         "*.txt"
     ],
