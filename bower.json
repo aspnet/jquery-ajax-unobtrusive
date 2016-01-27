@@ -1,6 +1,6 @@
 {
     "name": "jquery-ajax-unobtrusive",
-    "version": "3.2.3",
+    "version": "3.2.4",
     "homepage": "https://github.com/aspnet/jquery-ajax-unobtrusive",
     "description": "Add-on to jQuery Ajax to enable unobtrusive options in data-* attributes",
     "main": [
