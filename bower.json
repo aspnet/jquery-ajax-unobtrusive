@@ -10,7 +10,8 @@
         "**/.*",
         "*.json",
         "*.md",
-        "*.txt"
+        "*.txt",
+        "!LICENSE.txt"
     ],
     "keywords": [
         "jquery",
