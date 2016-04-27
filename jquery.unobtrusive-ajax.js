@@ -107,7 +107,12 @@
             },
             success: function (data, status, xhr) {
                 asyncOnSuccess(element, data, xhr.getResponseHeader("Content-Type") || "text/html");
-                getFunction(element.getAttribute("data-ajax-success"), ["data", "status", "xhr"]).apply(element, arguments);
+                var args = [
+                    data || "",
+                    $(data).hasClass("validation-summary-errors") || $(data).find(".validation-summary-errors").length || $(data).find(".field-validation-error").length ? "error" : "success",
+                    xhr
+                ];
+                getFunction(element.getAttribute("data-ajax-success"), ["data", "status", "xhr"]).apply(element, args);
             },
             error: function () {
                 getFunction(element.getAttribute("data-ajax-failure"), ["xhr", "status", "error"]).apply(element, arguments);
