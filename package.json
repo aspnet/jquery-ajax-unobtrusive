@@ -26,6 +26,7 @@
   "devDependencies": {
     "gulp": "3.8.11",
     "gulp-rename": "1.2.2",
-    "gulp-uglify": "1.2.0"
+    "gulp-uglify": "1.2.0",
+    "uglify-save-license": "^0.4.1"
   }
 }
