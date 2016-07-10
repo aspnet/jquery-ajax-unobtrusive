@@ -92,25 +92,45 @@
             type: element.getAttribute("data-ajax-method") || undefined,
             url: element.getAttribute("data-ajax-url") || undefined,
             cache: (element.getAttribute("data-ajax-cache") || "").toLowerCase() === "true",
-            beforeSend: function (xhr) {
+            beforeSend: function (xhr, settings) {
                 var result;
                 asyncOnBeforeSend(xhr, method);
                 result = getFunction(element.getAttribute("data-ajax-begin"), ["xhr"]).apply(element, arguments);
-                if (result !== false) {
+                var eventData = {
+                    xhr: xhr, 
+                    settings: settings,
+                    canContinue: result
+                };
+                $(element).trigger("ajax:begin", eventData);
+                if (eventData.canContinue !== false) {
                     loading.show(duration);
                 }
-                return result;
+                return eventData.canContinue;
             },
-            complete: function () {
+            complete: function (xhr, textStatus) {
                 loading.hide(duration);
                 getFunction(element.getAttribute("data-ajax-complete"), ["xhr", "status"]).apply(element, arguments);
+                $(element).trigger("ajax:complete", {
+                    xhr: xhr,
+                    textStatus: textStatus
+                });
             },
             success: function (data, status, xhr) {
                 asyncOnSuccess(element, data, xhr.getResponseHeader("Content-Type") || "text/html");
                 getFunction(element.getAttribute("data-ajax-success"), ["data", "status", "xhr"]).apply(element, arguments);
+                $(element).trigger("ajax:success", {
+                    data: data,
+                    status: status, 
+                    xhr: xhr
+                });
             },
-            error: function () {
+            error: function (xhr, textStatus, errorThrown) {
                 getFunction(element.getAttribute("data-ajax-failure"), ["xhr", "status", "error"]).apply(element, arguments);
+                $(element).trigger("ajax:failure", {
+                    xhr: xhr,
+                    textStatus: textStatus,
+                    errorThrown: errorThrown
+                });
             }
         });
 
