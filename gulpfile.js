@@ -3,7 +3,7 @@ var gulp = require("gulp"),
     rename = require('gulp-rename');
 
 gulp.task("minifyJS", function () {
-    gulp.src(["jquery-ajax-unobtrusive.js"], { base: "." })
+    gulp.src(["jquery.unobtrusive-ajax.js"], { base: "." })
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest("."));
