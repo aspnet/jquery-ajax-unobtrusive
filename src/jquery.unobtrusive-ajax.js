@@ -69,6 +69,9 @@
             case "REPLACE-WITH":
                 $(update).replaceWith(data);
                 break;
+            case "REMOVE"
+                $(update).remove();
+                break;
             default:
                 $(update).html(data);
                 break;
