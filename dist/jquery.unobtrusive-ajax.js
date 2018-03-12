@@ -1,6 +1,6 @@
 // Unobtrusive Ajax support library for jQuery
 // Copyright (C) Microsoft Corporation. All rights reserved.
-// @version v3.2.4
+// @version v3.2.5
 // 
 // Microsoft grants you the right to use these script files for the sole
 // purpose of either: (i) interacting through your browser with the Microsoft
