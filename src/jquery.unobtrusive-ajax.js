@@ -172,7 +172,7 @@
             return;
         }
         asyncRequest(this, {
-            url: this.action,
+            url: clickTarget && clickTarget.attr('formaction') || this.action,
             type: this.method || "GET",
             data: clickInfo.concat($(this).serializeArray())
         });
