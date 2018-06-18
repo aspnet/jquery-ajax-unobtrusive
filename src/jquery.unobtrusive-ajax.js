@@ -1,6 +1,6 @@
 // Unobtrusive Ajax support library for jQuery
 // Copyright (C) Microsoft Corporation. All rights reserved.
-// @version <placeholder>
+// @version v3.2.5
 // 
 // Microsoft grants you the right to use these script files for the sole
 // purpose of either: (i) interacting through your browser with the Microsoft
@@ -16,165 +16,204 @@
 /*jslint white: true, browser: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, newcap: true, immed: true, strict: false */
 /*global window: false, jQuery: false */
 
-(function ($) {
-    var data_click = "unobtrusiveAjaxClick",
-        data_target = "unobtrusiveAjaxClickTarget",
-        data_validation = "unobtrusiveValidation";
+(function ($)
+{
+	var data_click = 'unobtrusiveAjaxClick',
+		data_target = 'unobtrusiveAjaxClickTarget',
+		data_action = 'unobtrusiveAjaxClickAction',
+		data_method = 'unobtrusiveAjaxClickMethod',
+		data_validation = 'unobtrusiveValidation';
 
-    function getFunction(code, argNames) {
-        var fn = window, parts = (code || "").split(".");
-        while (fn && parts.length) {
-            fn = fn[parts.shift()];
-        }
-        if (typeof (fn) === "function") {
-            return fn;
-        }
-        argNames.push(code);
-        return Function.constructor.apply(null, argNames);
-    }
+	function getFunction(code, argNames)
+	{
+		var fn = window, parts = (code || '').split('.');
+		while (fn && parts.length)
+		{
+			fn = fn[parts.shift()];
+		}
+		if (typeof (fn) === 'function')
+		{
+			return fn;
+		}
+		argNames.push(code);
+		return Function.constructor.apply(null, argNames);
+	}
 
-    function isMethodProxySafe(method) {
-        return method === "GET" || method === "POST";
-    }
+	function isMethodProxySafe(method)
+	{
+		return method === 'GET' || method === 'POST';
+	}
 
-    function asyncOnBeforeSend(xhr, method) {
-        if (!isMethodProxySafe(method)) {
-            xhr.setRequestHeader("X-HTTP-Method-Override", method);
-        }
-    }
+	function asyncOnBeforeSend(xhr, method)
+	{
+		if (!isMethodProxySafe(method))
+		{
+			xhr.setRequestHeader('X-HTTP-Method-Override', method);
+		}
+	}
 
-    function asyncOnSuccess(element, data, contentType) {
-        var mode;
+	function asyncOnSuccess(element, data, contentType)
+	{
+		var mode;
 
-        if (contentType.indexOf("application/x-javascript") !== -1) {  // jQuery already executes JavaScript for us
-            return;
-        }
+		if (contentType.indexOf('application/x-javascript') !== -1)
+		{  // jQuery already executes JavaScript for us
+			return;
+		}
 
-        mode = (element.getAttribute("data-ajax-mode") || "").toUpperCase();
-        $(element.getAttribute("data-ajax-update")).each(function (i, update) {
-            var top;
+		mode = (element.getAttribute('data-ajax-mode') || '').toUpperCase();
+		$(element.getAttribute('data-ajax-update')).each(function (i, update)
+		{
+			var top;
 
-            switch (mode) {
-                case "BEFORE":
-                    $(update).prepend(data);
-                    break;
-                case "AFTER":
-                    $(update).append(data);
-                    break;
-                case "REPLACE-WITH":
-                    $(update).replaceWith(data);
-                    break;
-                default:
-                    $(update).html(data);
-                    break;
-            }
-        });
-    }
+			switch (mode)
+			{
+				case 'BEFORE':
+					$(update).prepend(data);
+					break;
+				case 'AFTER':
+					$(update).append(data);
+					break;
+				case 'REPLACE-WITH':
+					$(update).replaceWith(data);
+					break;
+				default:
+					$(update).html(data);
+					break;
+			}
+		});
+	}
 
-    function asyncRequest(element, options) {
-        var confirm, loading, method, duration;
+	function asyncRequest(element, options)
+	{
+		var confirm, loading, method, duration;
 
-        confirm = element.getAttribute("data-ajax-confirm");
-        if (confirm && !window.confirm(confirm)) {
-            return;
-        }
+		confirm = element.getAttribute('data-ajax-confirm');
+		if (confirm && !window.confirm(confirm))
+		{
+			return;
+		}
 
-        loading = $(element.getAttribute("data-ajax-loading"));
-        duration = parseInt(element.getAttribute("data-ajax-loading-duration"), 10) || 0;
+		loading = $(element.getAttribute('data-ajax-loading'));
+		duration = parseInt(element.getAttribute('data-ajax-loading-duration'), 10) || 0;
 
-        $.extend(options, {
-            type: element.getAttribute("data-ajax-method") || undefined,
-            url: element.getAttribute("data-ajax-url") || undefined,
-            cache: (element.getAttribute("data-ajax-cache") || "").toLowerCase() === "true",
-            beforeSend: function (xhr) {
-                var result;
-                asyncOnBeforeSend(xhr, method);
-                result = getFunction(element.getAttribute("data-ajax-begin"), ["xhr"]).apply(element, arguments);
-                if (result !== false) {
-                    loading.show(duration);
-                }
-                return result;
-            },
-            complete: function () {
-                loading.hide(duration);
-                getFunction(element.getAttribute("data-ajax-complete"), ["xhr", "status"]).apply(element, arguments);
-            },
-            success: function (data, status, xhr) {
-                asyncOnSuccess(element, data, xhr.getResponseHeader("Content-Type") || "text/html");
-                getFunction(element.getAttribute("data-ajax-success"), ["data", "status", "xhr"]).apply(element, arguments);
-            },
-            error: function () {
-                getFunction(element.getAttribute("data-ajax-failure"), ["xhr", "status", "error"]).apply(element, arguments);
-            }
-        });
+		$.extend(options, {
+			type: element.getAttribute('data-ajax-method') || undefined,
+			url: element.getAttribute('data-ajax-url') || undefined,
+			cache: (element.getAttribute('data-ajax-cache') || '').toLowerCase() === 'true',
+			beforeSend: function (xhr)
+			{
+				var result;
+				asyncOnBeforeSend(xhr, method);
+				result = getFunction(element.getAttribute('data-ajax-begin'), ['xhr']).apply(element, arguments);
+				if (result !== false)
+				{
+					loading.show(duration);
+				}
+				return result;
+			},
+			complete: function ()
+			{
+				loading.hide(duration);
+				getFunction(element.getAttribute('data-ajax-complete'), ['xhr', 'status']).apply(element, arguments);
+			},
+			success: function (data, status, xhr)
+			{
+				asyncOnSuccess(element, data, xhr.getResponseHeader('Content-Type') || 'text/html');
+				getFunction(element.getAttribute('data-ajax-success'), ['data', 'status', 'xhr']).apply(element, arguments);
+			},
+			error: function ()
+			{
+				getFunction(element.getAttribute('data-ajax-failure'), ['xhr', 'status', 'error']).apply(element, arguments);
+			}
+		});
 
-        options.data.push({ name: "X-Requested-With", value: "XMLHttpRequest" });
+		options.data.push({ name: 'X-Requested-With', value: 'XMLHttpRequest' });
 
-        method = options.type.toUpperCase();
-        if (!isMethodProxySafe(method)) {
-            options.type = "POST";
-            options.data.push({ name: "X-HTTP-Method-Override", value: method });
-        }
+		method = options.type.toUpperCase();
+		if (!isMethodProxySafe(method))
+		{
+			options.type = 'POST';
+			options.data.push({ name: 'X-HTTP-Method-Override', value: method });
+		}
 
-        $.ajax(options);
-    }
+		$.ajax(options);
+	}
 
-    function validate(form) {
-        var validationInfo = $(form).data(data_validation);
-        return !validationInfo || !validationInfo.validate || validationInfo.validate();
-    }
+	function validate(form)
+	{
+		var validationInfo = $(form).data(data_validation);
+		return !validationInfo || !validationInfo.validate || validationInfo.validate();
+	}
 
-    $(document).on("click", "a[data-ajax=true]", function (evt) {
-        evt.preventDefault();
-        asyncRequest(this, {
-            url: this.href,
-            type: "GET",
-            data: []
-        });
-    });
+	$(document).on('click', 'a[data-ajax=true]', function (evt)
+	{
+		evt.preventDefault();
+		asyncRequest(this, {
+			url: this.href,
+			type: 'GET',
+			data: []
+		});
+	});
 
-    $(document).on("click", "form[data-ajax=true] input[type=image]", function (evt) {
-        var name = evt.target.name,
-            target = $(evt.target),
-            form = $(target.parents("form")[0]),
-            offset = target.offset();
+	$(document).on('click', 'form[data-ajax=true] input[type=image]', function (evt)
+	{
+		var name = evt.target.name,
+			target = $(evt.target),
+			form = $(target.parents('form')[0]),
+			offset = target.offset();
 
-        form.data(data_click, [
-            { name: name + ".x", value: Math.round(evt.pageX - offset.left) },
-            { name: name + ".y", value: Math.round(evt.pageY - offset.top) }
-        ]);
+		form.data(data_click, [
+			{ name: name + '.x', value: Math.round(evt.pageX - offset.left) },
+			{ name: name + '.y', value: Math.round(evt.pageY - offset.top) }
+		]);
 
-        setTimeout(function () {
-            form.removeData(data_click);
-        }, 0);
-    });
+		setTimeout(function ()
+		{
+			form.removeData(data_click);
+		}, 0);
+	});
 
-    $(document).on("click", "form[data-ajax=true] :submit", function (evt) {
-        var name = evt.currentTarget.name,
-            target = $(evt.target),
-            form = $(target.parents("form")[0]);
+	$(document).on('click', 'form[data-ajax=true] :submit, :submit:not([form=""])', function (evt)
+	{
+		var name = evt.currentTarget.name,
+			action = evt.currentTarget.getAttribute('formaction'),
+			method = evt.currentTarget.getAttribute('formmethod'),
+			target = $(evt.target),
+			form = $(evt.currentTarget.form || target.parents('form')[0]);
 
-        form.data(data_click, name ? [{ name: name, value: evt.currentTarget.value }] : []);
-        form.data(data_target, target);
+		form.data(data_click, name ? [{ name: name, value: evt.currentTarget.value }] : []);
+		form.data(data_target, target);
+		form.data(data_action, action);
+		form.data(data_method, method);
 
-        setTimeout(function () {
-            form.removeData(data_click);
-            form.removeData(data_target);
-        }, 0);
-    });
+		setTimeout(function ()
+		{
+			form.removeData(data_click);
+			form.removeData(data_target);
+			form.removeData(data_action, action);
+			form.removeData(data_method, method);
+		}, 0);
+	});
 
-    $(document).on("submit", "form[data-ajax=true]", function (evt) {
-        var clickInfo = $(this).data(data_click) || [],
-            clickTarget = $(this).data(data_target),
-            isCancel = clickTarget && (clickTarget.hasClass("cancel") || clickTarget.attr('formnovalidate') !== undefined);
-        evt.preventDefault();
-        if (!isCancel && !validate(this)) {
-            return;
-        }
-        asyncRequest(this, {
-            url: this.action,
-            type: this.method || "GET",
-            data: clickInfo.concat($(this).serializeArray())
-        });
-    });
+	$(document).on('submit', 'form[data-ajax=true]', function (evt)
+	{
+		var clickInfo = $(this).data(data_click) || [],
+			clickTarget = $(this).data(data_target),
+			clickAction = $(this).data(data_action),
+			clickMethod = $(this).data(data_method),
+			isCancel = clickTarget && (clickTarget.hasClass('cancel') || clickTarget.attr('formnovalidate') !== undefined);
+
+		evt.preventDefault();
+
+		if (!isCancel && !validate(this))
+		{
+			return;
+		}
+		asyncRequest(this, {
+			url: clickAction || this.action,
+			type: clickMethod || this.method || 'GET',
+			data: clickInfo.concat($(this).serializeArray())
+		});
+	});
 }(jQuery));
