@@ -180,7 +180,7 @@
 			action = evt.currentTarget.getAttribute('formaction'),
 			method = evt.currentTarget.getAttribute('formmethod'),
 			target = $(evt.target),
-			form = $('#' + evt.currentTarget.getAttribute('form')) || $(target.parents('form')[0]);
+			form = $(evt.currentTarget.form || target.parents('form')[0]);
 
 		form.data(data_click, name ? [{ name: name, value: evt.currentTarget.value }] : []);
 		form.data(data_target, target);
@@ -203,7 +203,9 @@
 			clickAction = $(this).data(data_action),
 			clickMethod = $(this).data(data_method),
 			isCancel = clickTarget && (clickTarget.hasClass('cancel') || clickTarget.attr('formnovalidate') !== undefined);
+
 		evt.preventDefault();
+
 		if (!isCancel && !validate(this))
 		{
 			return;
