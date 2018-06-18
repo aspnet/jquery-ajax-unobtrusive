@@ -18,20 +18,20 @@
 
 (function ($)
 {
-	var data_click = "unobtrusiveAjaxClick",
-		data_target = "unobtrusiveAjaxClickTarget",
-		data_action = "unobtrusiveAjaxClickAction",
-		data_method = "unobtrusiveAjaxClickMethod",
-		data_validation = "unobtrusiveValidation";
+	var data_click = 'unobtrusiveAjaxClick',
+		data_target = 'unobtrusiveAjaxClickTarget',
+		data_action = 'unobtrusiveAjaxClickAction',
+		data_method = 'unobtrusiveAjaxClickMethod',
+		data_validation = 'unobtrusiveValidation';
 
 	function getFunction(code, argNames)
 	{
-		var fn = window, parts = (code || "").split(".");
+		var fn = window, parts = (code || '').split('.');
 		while (fn && parts.length)
 		{
 			fn = fn[parts.shift()];
 		}
-		if (typeof (fn) === "function")
+		if (typeof (fn) === 'function')
 		{
 			return fn;
 		}
@@ -41,14 +41,14 @@
 
 	function isMethodProxySafe(method)
 	{
-		return method === "GET" || method === "POST";
+		return method === 'GET' || method === 'POST';
 	}
 
 	function asyncOnBeforeSend(xhr, method)
 	{
 		if (!isMethodProxySafe(method))
 		{
-			xhr.setRequestHeader("X-HTTP-Method-Override", method);
+			xhr.setRequestHeader('X-HTTP-Method-Override', method);
 		}
 	}
 
@@ -56,25 +56,25 @@
 	{
 		var mode;
 
-		if (contentType.indexOf("application/x-javascript") !== -1)
+		if (contentType.indexOf('application/x-javascript') !== -1)
 		{  // jQuery already executes JavaScript for us
 			return;
 		}
 
-		mode = (element.getAttribute("data-ajax-mode") || "").toUpperCase();
-		$(element.getAttribute("data-ajax-update")).each(function (i, update)
+		mode = (element.getAttribute('data-ajax-mode') || '').toUpperCase();
+		$(element.getAttribute('data-ajax-update')).each(function (i, update)
 		{
 			var top;
 
 			switch (mode)
 			{
-				case "BEFORE":
+				case 'BEFORE':
 					$(update).prepend(data);
 					break;
-				case "AFTER":
+				case 'AFTER':
 					$(update).append(data);
 					break;
-				case "REPLACE-WITH":
+				case 'REPLACE-WITH':
 					$(update).replaceWith(data);
 					break;
 				default:
@@ -88,24 +88,24 @@
 	{
 		var confirm, loading, method, duration;
 
-		confirm = element.getAttribute("data-ajax-confirm");
+		confirm = element.getAttribute('data-ajax-confirm');
 		if (confirm && !window.confirm(confirm))
 		{
 			return;
 		}
 
-		loading = $(element.getAttribute("data-ajax-loading"));
-		duration = parseInt(element.getAttribute("data-ajax-loading-duration"), 10) || 0;
+		loading = $(element.getAttribute('data-ajax-loading'));
+		duration = parseInt(element.getAttribute('data-ajax-loading-duration'), 10) || 0;
 
 		$.extend(options, {
-			type: element.getAttribute("data-ajax-method") || undefined,
-			url: element.getAttribute("data-ajax-url") || undefined,
-			cache: (element.getAttribute("data-ajax-cache") || "").toLowerCase() === "true",
+			type: element.getAttribute('data-ajax-method') || undefined,
+			url: element.getAttribute('data-ajax-url') || undefined,
+			cache: (element.getAttribute('data-ajax-cache') || '').toLowerCase() === 'true',
 			beforeSend: function (xhr)
 			{
 				var result;
 				asyncOnBeforeSend(xhr, method);
-				result = getFunction(element.getAttribute("data-ajax-begin"), ["xhr"]).apply(element, arguments);
+				result = getFunction(element.getAttribute('data-ajax-begin'), ['xhr']).apply(element, arguments);
 				if (result !== false)
 				{
 					loading.show(duration);
@@ -115,26 +115,26 @@
 			complete: function ()
 			{
 				loading.hide(duration);
-				getFunction(element.getAttribute("data-ajax-complete"), ["xhr", "status"]).apply(element, arguments);
+				getFunction(element.getAttribute('data-ajax-complete'), ['xhr', 'status']).apply(element, arguments);
 			},
 			success: function (data, status, xhr)
 			{
-				asyncOnSuccess(element, data, xhr.getResponseHeader("Content-Type") || "text/html");
-				getFunction(element.getAttribute("data-ajax-success"), ["data", "status", "xhr"]).apply(element, arguments);
+				asyncOnSuccess(element, data, xhr.getResponseHeader('Content-Type') || 'text/html');
+				getFunction(element.getAttribute('data-ajax-success'), ['data', 'status', 'xhr']).apply(element, arguments);
 			},
 			error: function ()
 			{
-				getFunction(element.getAttribute("data-ajax-failure"), ["xhr", "status", "error"]).apply(element, arguments);
+				getFunction(element.getAttribute('data-ajax-failure'), ['xhr', 'status', 'error']).apply(element, arguments);
 			}
 		});
 
-		options.data.push({ name: "X-Requested-With", value: "XMLHttpRequest" });
+		options.data.push({ name: 'X-Requested-With', value: 'XMLHttpRequest' });
 
 		method = options.type.toUpperCase();
 		if (!isMethodProxySafe(method))
 		{
-			options.type = "POST";
-			options.data.push({ name: "X-HTTP-Method-Override", value: method });
+			options.type = 'POST';
+			options.data.push({ name: 'X-HTTP-Method-Override', value: method });
 		}
 
 		$.ajax(options);
@@ -146,26 +146,26 @@
 		return !validationInfo || !validationInfo.validate || validationInfo.validate();
 	}
 
-	$(document).on("click", "a[data-ajax=true]", function (evt)
+	$(document).on('click', 'a[data-ajax=true]', function (evt)
 	{
 		evt.preventDefault();
 		asyncRequest(this, {
 			url: this.href,
-			type: "GET",
+			type: 'GET',
 			data: []
 		});
 	});
 
-	$(document).on("click", "form[data-ajax=true] input[type=image]", function (evt)
+	$(document).on('click', 'form[data-ajax=true] input[type=image]', function (evt)
 	{
 		var name = evt.target.name,
 			target = $(evt.target),
-			form = $(target.parents("form")[0]),
+			form = $(target.parents('form')[0]),
 			offset = target.offset();
 
 		form.data(data_click, [
-			{ name: name + ".x", value: Math.round(evt.pageX - offset.left) },
-			{ name: name + ".y", value: Math.round(evt.pageY - offset.top) }
+			{ name: name + '.x', value: Math.round(evt.pageX - offset.left) },
+			{ name: name + '.y', value: Math.round(evt.pageY - offset.top) }
 		]);
 
 		setTimeout(function ()
@@ -174,13 +174,13 @@
 		}, 0);
 	});
 
-	$(document).on("click", "form[data-ajax=true] :submit", function (evt)
+	$(document).on('click', 'form[data-ajax=true] :submit, :submit:not([form=""])', function (evt)
 	{
 		var name = evt.currentTarget.name,
-			action = evt.currentTarget.formaction,
-			method = evt.currentTarget.formmethod,
+			action = evt.currentTarget.getAttribute('formaction'),
+			method = evt.currentTarget.getAttribute('formmethod'),
 			target = $(evt.target),
-			form = $(target.parents("form")[0]);
+			form = $('#' + evt.currentTarget.getAttribute('form')) || $(target.parents('form')[0]);
 
 		form.data(data_click, name ? [{ name: name, value: evt.currentTarget.value }] : []);
 		form.data(data_target, target);
@@ -196,13 +196,13 @@
 		}, 0);
 	});
 
-	$(document).on("submit", "form[data-ajax=true]", function (evt)
+	$(document).on('submit', 'form[data-ajax=true]', function (evt)
 	{
 		var clickInfo = $(this).data(data_click) || [],
 			clickTarget = $(this).data(data_target),
 			clickAction = $(this).data(data_action),
 			clickMethod = $(this).data(data_method),
-			isCancel = clickTarget && (clickTarget.hasClass("cancel") || clickTarget.attr('formnovalidate') !== undefined);
+			isCancel = clickTarget && (clickTarget.hasClass('cancel') || clickTarget.attr('formnovalidate') !== undefined);
 		evt.preventDefault();
 		if (!isCancel && !validate(this))
 		{
@@ -210,7 +210,7 @@
 		}
 		asyncRequest(this, {
 			url: clickAction || this.action,
-			type: clickMethod || this.method || "GET",
+			type: clickMethod || this.method || 'GET',
 			data: clickInfo.concat($(this).serializeArray())
 		});
 	});
