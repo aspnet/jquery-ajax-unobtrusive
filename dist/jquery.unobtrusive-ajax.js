@@ -115,8 +115,8 @@
             options.type = "POST";
             options.data.push({ name: "X-HTTP-Method-Override", value: method });
         }
-		
-		// change here:
+
+        // change here:
 		// Check for a Form POST with enctype=multipart/form-data
 		// add the input file that were not previously included in the serializeArray()
 		// set processData and contentType to false
