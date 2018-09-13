@@ -5,16 +5,19 @@ var gulp = require("gulp"),
     lec = require('gulp-line-ending-corrector'),
     pkg = require('./package.json');
 
-gulp.task("minifyJS", function(){
+gulp.task("minifyJS", function (done) {
     gulp.src(["src/jquery.unobtrusive-ajax.js"])
         .pipe(replace(/@version.*/, '@version v' + pkg.version))
         .pipe(gulp.dest("dist"))
         .pipe(uglify({
             preserveComments: 'license'
         }))
-        .pipe(lec({eolc: 'CRLF'}))
-        .pipe(rename({suffix: '.min'}))
+        .pipe(lec({ eolc: 'CRLF' }))
+        .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest("dist"));
+    done();
 });
 
-gulp.task("default", ["minifyJS"]);
+gulp.task('default', gulp.series('minifyJS', function (done) {
+    done();
+}));

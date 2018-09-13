@@ -11,7 +11,7 @@
         </ReadLinesFromFile>
         <Exec Command="npm install" />
         <Exec Command="npm version --no-git-tag-version --allow-same-version $(PackageVersion)" />
-        <Exec Command="gulp" />
+        <Exec Command="npx gulp" />
         <Exec Command="nuget pack $(NuspecPath) -Version $(PackageVersion)" />
     </Target>
 </Project>
