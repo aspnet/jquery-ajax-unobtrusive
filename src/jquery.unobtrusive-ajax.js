@@ -47,7 +47,7 @@
     function asyncOnSuccess(element, data, contentType) {
         var mode;
 
-        if (contentType.indexOf("application/x-javascript") !== -1) {  // jQuery already executes JavaScript for us
+        if (contentType.indexOf("application/x-javascript") !== -1 || $.isPlainObject(data)){  // jQuery already executes JavaScript for us
             return;
         }
 
