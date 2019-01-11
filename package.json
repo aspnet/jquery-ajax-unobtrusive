@@ -25,7 +25,8 @@
     "dist/jquery.unobtrusive-ajax.min.js"
   ],
   "dependencies": {
-    "jquery": ">=1.8"
+    "jquery": ">=1.8",
+    "hoek": ">=4.2.1"
   },
   "devDependencies": {
     "gulp": "^4.0.0",
