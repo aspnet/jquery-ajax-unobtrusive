@@ -88,6 +88,7 @@
             url: element.getAttribute("data-ajax-url") || undefined,
             cache: (element.getAttribute("data-ajax-cache") || "").toLowerCase() === "true",
             beforeSend: function (xhr) {
+				$(element).triggerHandler("ajax:begin", arguments);
                 var result;
                 asyncOnBeforeSend(xhr, method);
                 result = getFunction(element.getAttribute("data-ajax-begin"), ["xhr"]).apply(element, arguments);
@@ -97,14 +98,17 @@
                 return result;
             },
             complete: function () {
+				$(element).triggerHandler("ajax:complete", arguments);
                 loading.hide(duration);
                 getFunction(element.getAttribute("data-ajax-complete"), ["xhr", "status"]).apply(element, arguments);
             },
             success: function (data, status, xhr) {
+				$(element).triggerHandler("ajax:success", arguments);
                 asyncOnSuccess(element, data, xhr.getResponseHeader("Content-Type") || "text/html");
                 getFunction(element.getAttribute("data-ajax-success"), ["data", "status", "xhr"]).apply(element, arguments);
             },
             error: function () {
+				$(element).triggerHandler("ajax:failure", arguments);
                 getFunction(element.getAttribute("data-ajax-failure"), ["xhr", "status", "error"]).apply(element, arguments);
             }
         });
