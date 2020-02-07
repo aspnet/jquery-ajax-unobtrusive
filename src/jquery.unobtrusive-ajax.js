@@ -172,8 +172,8 @@
             return;
         }
         asyncRequest(this, {
-            url: clickTarget && clickTarget.attr('formaction') || this.action,
-            type: this.method || "GET",
+            url: clickTarget && clickTarget.attr("formaction") || this.action,
+            type: clickTarget && clickTarget.attr("formmethod") || this.method || "GET",
             data: clickInfo.concat($(this).serializeArray())
         });
     });
