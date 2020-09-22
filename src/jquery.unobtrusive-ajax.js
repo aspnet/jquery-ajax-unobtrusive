@@ -86,6 +86,7 @@
         $.extend(options, {
             type: element.getAttribute("data-ajax-method") || undefined,
             url: element.getAttribute("data-ajax-url") || undefined,
+            contentType: element.getAttribute("data-ajax-content-type") || undefined,
             cache: (element.getAttribute("data-ajax-cache") || "").toLowerCase() === "true",
             beforeSend: function (xhr) {
                 var result;
