@@ -1,4 +1,4 @@
-***IMPORTANT***: This repository is in maintenance mode. We do not work, nor plan to work on any new features. Only security and critical bug fixes will be worked on.
+***IMPORTANT***: This repository is archived. Microsoft.jQuery.Unobtrusive.Ajax support has moved to the https://github.com/aspnet/aspnetwebstack repo.
 
 jQuery Unobtrusive Ajax
 =============================
