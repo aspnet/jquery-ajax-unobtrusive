@@ -23,7 +23,8 @@
         data_validation = "unobtrusiveValidation";
 
     function getFunction(code, argNames) {
-        var fn = window, parts = (code || "").split(".");
+        if (!code) return function() { return null; };
+        var fn = window, parts = code.split(".");
         while (fn && parts.length) {
             fn = fn[parts.shift()];
         }
